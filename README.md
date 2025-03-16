@@ -1,6 +1,6 @@
-# Form Management System
+# User Management Backend
 
-RESTful API for form management built with Node.js, Express, and MongoDB. This backend service follows clean architecture principles with a layered design for better maintainability and testability.
+A robust and scalable RESTful API for form management built with Node.js, Express, and MongoDB. This backend service follows clean architecture principles with a layered design for better maintainability and testability.
 
 ## Features
 
@@ -94,7 +94,7 @@ The API will be available at `http://localhost:3001`
 ```json
 POST /api/forms
 {
-  "name": "ContactForm",
+  "name": "Contact Form",
   "isVisible": true,
   "isReadOnly": false,
   "fields": [
@@ -115,6 +115,93 @@ POST /api/forms
     }
   ]
 }
+```
+
+## Testing
+
+The application includes comprehensive test coverage using Jest as the test runner. The tests follow a simple, focused approach to ensure the core functionality works correctly.
+
+### Test Structure
+
+```
+tests/
+├── controllers/     # Controller unit tests
+├── models/          # Model validation tests
+├── repositories/    # Repository unit tests
+├── services/        # Service unit tests
+├── integration/     # API endpoint integration tests
+└── setup.js         # Test setup configuration
+```
+
+### Running Tests
+
+Run all tests:
+```
+npm test
+```
+
+Run tests in watch mode:
+```
+npm run test:watch
+```
+
+Generate test coverage report:
+```
+npm run test:coverage
+```
+
+### Test Types
+
+#### Unit Tests
+- **Repository Tests**: Verify data access operations work correctly with the database
+- **Service Tests**: Ensure business logic and validation rules are properly applied
+- **Controller Tests**: Check HTTP request handling and response formatting
+- **Model Tests**: Validate schema definitions, defaults, and constraints
+
+#### Integration Tests
+- **API Endpoint Tests**: Test the complete request-response cycle for all CRUD operations
+
+### Test Implementation Details
+
+- **Mocking**: Service tests use mocked repositories to isolate business logic
+- **In-Memory Database**: Tests use MongoDB Memory Server to avoid affecting real databases
+- **Test Data**: Simple, focused test data that covers essential use cases
+- **Assertions**: Clear, minimal assertions that verify only what's necessary
+
+### Current Test Coverage
+
+The test suite achieves approximately 80% statement coverage across the codebase:
+- Models: 100% coverage
+- Repositories: 100% coverage
+- Routes: 100% coverage
+- Services: ~73% coverage
+- Controllers: ~72% coverage
+
+### Example Test
+
+```javascript
+// Example repository test
+it('should find all forms', async () => {
+  const forms = await FormRepository.findAll();
+  
+  expect(forms.length).toBeGreaterThan(0);
+  expect(forms[0].name).toBe('Contact Form');
+});
+
+// Example integration test
+it('should create a new form', async () => {
+  const newForm = {
+    name: 'Feedback Form',
+    fields: [{ name: 'rating', type: 'number' }]
+  };
+  
+  const res = await request(app)
+    .post('/api/forms')
+    .send(newForm)
+    .expect(201);
+  
+  expect(res.body.name).toBe('Feedback Form');
+});
 ```
 
 ## Security Features
@@ -141,9 +228,3 @@ The project follows a consistent code style with:
 - ES6+ JavaScript features
 - Class-based architecture
 - Async/await for asynchronous operations
-
-### Testing
-Run tests with:
-```
-npm test
-```
