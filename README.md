@@ -1,6 +1,6 @@
-# User Management Backend
+# Form Management System
 
-A robust and scalable RESTful API for form management built with Node.js, Express, and MongoDB. This backend service follows clean architecture principles with a layered design for better maintainability and testability.
+RESTful API for form management built with Node.js, Express, and MongoDB. This backend service follows clean architecture principles with a layered design for better maintainability and testability.
 
 ## Features
 
