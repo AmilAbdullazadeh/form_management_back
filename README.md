@@ -35,6 +35,78 @@ src/
 └── server.js        # Server entry point
 ```
 
+## Why MongoDB?
+
+MongoDB was chosen as the database for this project for several key reasons:
+
+### Document-Oriented Data Model
+Forms have varying fields and structures, making MongoDB's document model ideal:
+- Forms can have different numbers and types of fields
+- The schema is flexible and can evolve over time
+- Nested structure of forms (with fields as sub-documents) maps naturally to MongoDB's document structure
+
+### Schema Flexibility
+The Form schema includes an array of field objects with properties like name, type, and isRequired. This variable structure is handled elegantly in MongoDB, whereas in a relational database it would require complex joins or normalization.
+
+### JSON-Native Storage
+The API deals with JSON data for requests and responses. MongoDB stores data in BSON (Binary JSON), making the conversion between API payloads and database storage seamless.
+
+### Scalability
+MongoDB's horizontal scaling capabilities through sharding support growth as the application scales.
+
+### Query Capabilities
+MongoDB's query language is powerful for the types of queries needed in this application, such as finding forms by name or ID, which are common operations in the repository layer.
+
+## Why Class-Based Architecture?
+
+The API uses a Class-based architecture for several important reasons:
+
+### Clean Separation of Concerns
+The code is organized into distinct layers, each implemented as classes with specific responsibilities:
+- Controllers: Handle HTTP requests/responses
+- Services: Implement business logic
+- Repositories: Manage data access
+- Models: Define data structure
+
+### Encapsulation
+Classes allow encapsulation of related functionality:
+- `FormRepository` encapsulates all database operations
+- `FormService` encapsulates business rules and validation
+- `FormController` encapsulates request handling
+
+### Code Organization
+The class structure provides a consistent pattern across the application, making the code more maintainable and easier to understand.
+
+### Dependency Injection
+The architecture uses a form of dependency injection where:
+- Controllers depend on Services
+- Services depend on Repositories
+
+Example:
+```javascript
+class FormService {
+  constructor() {
+    this.formRepository = FormRepository;
+  }
+  // Methods that use this.formRepository
+}
+```
+
+### Testability
+The class-based approach makes the code highly testable, as seen in the comprehensive test suite. Each layer can be tested in isolation by mocking its dependencies.
+
+### Method Binding
+The class approach allows for proper method binding, which is important for maintaining the correct `this` context:
+```javascript
+module.exports = {
+  getAllForms: formController.getAllForms.bind(formController),
+  // Other methods
+};
+```
+
+### Error Handling
+The class structure facilitates centralized error handling, with services throwing specific errors that controllers can catch and transform into appropriate HTTP responses.
+
 ## Data Model
 
 ### Form Schema
@@ -87,35 +159,6 @@ The API will be available at `http://localhost:3001`
 - `POST /api/forms` - Create a new form
 - `PUT /api/forms/:id` - Update a form
 - `DELETE /api/forms/:id` - Delete a form
-
-## API Request Examples
-
-### Create a Form
-```json
-POST /api/forms
-{
-  "name": "Contact Form",
-  "isVisible": true,
-  "isReadOnly": false,
-  "fields": [
-    {
-      "name": "fullName",
-      "type": "text",
-      "isRequired": true
-    },
-    {
-      "name": "email",
-      "type": "email",
-      "isRequired": true
-    },
-    {
-      "name": "message",
-      "type": "text",
-      "isRequired": false
-    }
-  ]
-}
-```
 
 ## Testing
 
@@ -176,33 +219,6 @@ The test suite achieves approximately 80% statement coverage across the codebase
 - Routes: 100% coverage
 - Services: ~73% coverage
 - Controllers: ~72% coverage
-
-### Example Test
-
-```javascript
-// Example repository test
-it('should find all forms', async () => {
-  const forms = await FormRepository.findAll();
-  
-  expect(forms.length).toBeGreaterThan(0);
-  expect(forms[0].name).toBe('Contact Form');
-});
-
-// Example integration test
-it('should create a new form', async () => {
-  const newForm = {
-    name: 'Feedback Form',
-    fields: [{ name: 'rating', type: 'number' }]
-  };
-  
-  const res = await request(app)
-    .post('/api/forms')
-    .send(newForm)
-    .expect(201);
-  
-  expect(res.body.name).toBe('Feedback Form');
-});
-```
 
 ## Security Features
 
