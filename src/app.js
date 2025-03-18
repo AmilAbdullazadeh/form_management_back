@@ -18,13 +18,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // Security middleware
 app.use(helmet()); 
 app.use(mongoSanitize());
-
-// CORS middleware
-app.use(cors({
-  origin: ['https://form-management-sable.vercel.app', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 
 // Rate limiting
 const limiter = rateLimit({
