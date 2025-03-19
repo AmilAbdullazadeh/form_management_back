@@ -19,17 +19,11 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(helmet()); 
 app.use(mongoSanitize());
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:3000', 'https://form-management-sable.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-  res.sendStatus(200);
-});
 
 // Rate limiting
 const limiter = rateLimit({
