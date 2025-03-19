@@ -24,8 +24,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
-// Allow all origins for OPTIONS requests for preflight requests
-app.options('*', cors());
 
 // Rate limiting
 const limiter = rateLimit({
