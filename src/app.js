@@ -20,8 +20,12 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(cors({
   origin: ['http://localhost:3000', 'https://form-management-sable.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+// Allow all origins for OPTIONS requests for preflight requests
+app.options('*', cors());
 
 // Rate limiting
 const limiter = rateLimit({
